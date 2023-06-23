@@ -44,36 +44,43 @@ class Agent:
         im_b = Image.open(problem.figures["B"].visualFilename)
         im_c = Image.open(problem.figures["C"].visualFilename)
 
-        # Calculate number of black pixels in A and B
-        black_pixels_a = count_black_pixels(im_a)
-        black_pixels_b = count_black_pixels(im_b)
+        # Calculate number of black pixels in A, B and C
+        black_pixels_a = Agent.count_black_pixels(im_a)
+        black_pixels_b = Agent.count_black_pixels(im_b)
+        black_pixels_c = Agent.count_black_pixels(im_c)
 
         # Calculate difference in black pixels between A and B
         diff_a_b = black_pixels_a - black_pixels_b
 
         # Check differences with C images
+        closest_match_index = -1
+        closest_match_diff = float('inf')  # Initialize with a large value
+
         for i, image_path in enumerate(image_opt):
             im = Image.open(image_path)
-            black_pixels_c = count_black_pixels(im)
+            black_pixels_c = Agent.count_black_pixels(im)
             diff_c = black_pixels_c - black_pixels_a
 
             if diff_c == diff_a_b:
-                return i + 1  # Return the index of the matching image
+                return i + 1  # Return the index of the exact matching image
 
-        return -1  # No matching image found
+            # Check if the difference is closer to the desired difference
+            if abs(diff_c - diff_a_b) < closest_match_diff:
+                closest_match_diff = abs(diff_c - diff_a_b)
+                closest_match_index = i + 1
 
-def count_black_pixels(image):
-    # Convert the image to grayscale if needed
-    if image.mode != 'L':
-        image = image.convert('L')
-
-    # Get the image data as a list of pixel values
-    pixels = list(image.getdata())
-
-    # Count the number of black pixels (assuming black is represented by 0)
-    black_pixels = sum(pixel == 0 for pixel in pixels)
-    results = open("path/to/output/ProblemResults.csv", "w")
+        return closest_match_index  # Return the index of the closest matching image
 
 
-    return black_pixels
-       
+    def count_black_pixels(image):
+        # Convert the image to grayscale if needed
+        if image.mode != 'L':
+            image = image.convert('L')
+
+        # Get the image data as a list of pixel values
+        pixels = list(image.getdata())
+
+        # Count the number of black pixels (assuming black is represented by 0)
+        black_pixels = sum(pixel == 0 for pixel in pixels)
+
+        return black_pixels

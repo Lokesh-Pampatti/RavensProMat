@@ -98,7 +98,7 @@ class ProblemSet:
     # Returns the total number of problems answered in this set in a certain
     # type.
     def getTotal(self,result):
-        count=0;
+        count=0
         for problem in self.problems:
             if problem.getCorrect()==result:
                 count+=1

@@ -74,3 +74,4 @@ class Agent:
             "5": cv2.imread(problem.figures["5"].visualFilename),
             "6": cv2.imread(problem.figures["6"].visualFilename)
             }
+            print("hi")

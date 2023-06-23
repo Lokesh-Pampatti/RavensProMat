@@ -37,41 +37,43 @@ class Agent:
     # Use var = problem.figures["A"].visualFilename to open files
     # Do not use Absolute pathing to open files.
 
-    def Solve(self,problem):
-        #image opt = 1-6, 0 -> 1
-        image_opt = [problem.figures["1"].visualFilename,problem.figures["2"].visualFilename,problem.figures["3"].visualFilename,problem.figures["4"].visualFilename,problem.figures["5"].visualFilename,problem.figures["6"].visualFilename]
-        im_a = cv2.imread (problem.figures["A"].visualFilename)
-        im_b = problem.figures["B"].visualFilename
-        im_c = problem.figures["C"].visualFilename             
-       # return 2
-    #Organize files neatly in a dictionary
-        if problem.problemType == "2x2":
-            images = {
-            "A": cv2.imread(problem.figures["A"].visualFilename), 
-            "B": cv2.imread(problem.figures["B"].visualFilename), 
-            "C": cv2.imread(problem.figures["C"].visualFilename), 
-            "1": cv2.imread(problem.figures["1"].visualFilename), 
-            "2": cv2.imread(problem.figures["2"].visualFilename), 
-            "3": cv2.imread(problem.figures["3"].visualFilename), 
-            "4": cv2.imread(problem.figures["4"].visualFilename), 
-            "5": cv2.imread(problem.figures["5"].visualFilename), 
-            "6": cv2.imread(problem.figures["6"].visualFilename)
-            }
-        elif(problem.problemType == "3x3"):
-            images = {
-            "A": cv2.imread(problem.figures["A"].visualFilename),
-            "B": cv2.imread(problem.figures["B"].visualFilename),
-            "C": cv2.imread(problem.figures["C"].visualFilename),
-            "D": cv2.imread(problem.figures["D"].visualFilename),
-            "E": cv2.imread(problem.figures["E"].visualFilename),
-            "F": cv2.imread(problem.figures["F"].visualFilename),
-            "G": cv2.imread(problem.figures["G"].visualFilename),
-            "H": cv2.imread(problem.figures["H"].visualFilename),
-            "1": cv2.imread(problem.figures["1"].visualFilename),
-            "2": cv2.imread(problem.figures["2"].visualFilename),
-            "3": cv2.imread(problem.figures["3"].visualFilename),
-            "4": cv2.imread(problem.figures["4"].visualFilename),
-            "5": cv2.imread(problem.figures["5"].visualFilename),
-            "6": cv2.imread(problem.figures["6"].visualFilename)
-            }
-            print("hi")
+    def Solve(self, problem):
+        # Load images
+        image_opt = [problem.figures["1"].visualFilename, problem.figures["2"].visualFilename, problem.figures["3"].visualFilename, problem.figures["4"].visualFilename, problem.figures["5"].visualFilename, problem.figures["6"].visualFilename]
+        im_a = Image.open(problem.figures["A"].visualFilename)
+        im_b = Image.open(problem.figures["B"].visualFilename)
+        im_c = Image.open(problem.figures["C"].visualFilename)
+
+        # Calculate number of black pixels in A and B
+        black_pixels_a = count_black_pixels(im_a)
+        black_pixels_b = count_black_pixels(im_b)
+
+        # Calculate difference in black pixels between A and B
+        diff_a_b = black_pixels_a - black_pixels_b
+
+        # Check differences with C images
+        for i, image_path in enumerate(image_opt):
+            im = Image.open(image_path)
+            black_pixels_c = count_black_pixels(im)
+            diff_c = black_pixels_c - black_pixels_a
+
+            if diff_c == diff_a_b:
+                return i + 1  # Return the index of the matching image
+
+        return -1  # No matching image found
+
+def count_black_pixels(image):
+    # Convert the image to grayscale if needed
+    if image.mode != 'L':
+        image = image.convert('L')
+
+    # Get the image data as a list of pixel values
+    pixels = list(image.getdata())
+
+    # Count the number of black pixels (assuming black is represented by 0)
+    black_pixels = sum(pixel == 0 for pixel in pixels)
+    results = open("path/to/output/ProblemResults.csv", "w")
+
+
+    return black_pixels
+       

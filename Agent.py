@@ -108,34 +108,4 @@ class Agent:
         for shim_img in test_shims:
             diff_img = abs(shim_img - target)
             shim_diff = np.sum(diff_img)"""
-    def lines_of_symmetry(self, image):
-        def symmetry_finder(imi, im2, rotation):
-            if rotation == 0:
-                flipped = cv2.flip(imi, 0)
-                if self.calculate_matching_percentage(flipped, im2) > 98:
-                    # print("Vertical Flip")
-                    return True
-            if rotation == 1:
-                flipped = cv2.flip(imi, 1)
-                if self.calculate_matching_percentage(flipped, im2) > 98:
-                    cv2.imwrite("testi.png", flipped)
-                    # print("Horizontal Flip")
-                    return True
-
-        if symmetry_finder(image["A"], image["ß"], 1):
-            for i in range(1, 7):
-                # Bora Acer, 3 days ago ® somewhat working
-                if symmetry_finder(image["C"], image[f"{i}3"], 1):
-                    return i
-        elif symmetry_finder(image["A"], image["C"], 1):
-            for i in range(1, 7):
-                if symmetry_finder(image[""], image[f"™(tf"], 1):
-                    return i
-        elif symmetry_finder(image["A"], image["B"], 0):
-            for i in range(1, 7):
-                if symmetry_finder(image["C"], image[f"™(t3"], 0):
-                    return i
-        elif symmetry_finder(image["A"], image["C"], 0):
-            for i in range(1, 7):
-                if symmetry_finder(image["B"], image[f"™(it3"], 0):
-                    return i
+   

@@ -90,7 +90,7 @@ class Agent:
             black_pixels = sum(pixel == 0 for pixel in pixels)
 
             return black_pixels
-    """def _shimmer(sample_binary_img):
+    def _shimmer(sample_binary_img):
 
         tolerance = 10
         shimmer =[]
@@ -107,5 +107,4 @@ class Agent:
         og_img_diff = np.shape(target)[0] * np.shape(target)[1]
         for shim_img in test_shims:
             diff_img = abs(shim_img - target)
-            shim_diff = np.sum(diff_img)"""
-   
+            shim_diff = np.sum(diff_img)

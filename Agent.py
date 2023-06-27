@@ -62,7 +62,7 @@ class Agent:
         im_c = Image.open(problem.figures["C"].visualFilename)
         shift_x = self.calculate_horizontal_shift(im_a, im_b)
         shift_y = self.calculate_vertical_shift(im_a, im_b)
-
+        print(image_opt)
         matching_options = image_opt
 
         for i in range(1, 7):

@@ -47,6 +47,15 @@ class Agent:
             problem.figures["5"].visualFilename,
             problem.figures["6"].visualFilename
         ]
+
+        if problem.problemType == "3x3":
+            image_opt.append(problem.figures["7"].visualFilename)
+            image_opt.append(problem.figures["7"].visualFilename)
+            im_e = Image.open(problem.figures["E"].visualFilename)
+            im_f = Image.open(problem.figures["F"].visualFilename)
+            im_g = Image.open(problem.figures["G"].visualFilename)
+            im_h = Image.open(problem.figures["H"].visualFilename)
+
         im_a = Image.open(problem.figures["A"].visualFilename)
         im_b = Image.open(problem.figures["B"].visualFilename)
         im_c = Image.open(problem.figures["C"].visualFilename)
@@ -108,3 +117,4 @@ class Agent:
         for shim_img in test_shims:
             diff_img = abs(shim_img - target)
             shim_diff = np.sum(diff_img)
+        return shim_diff

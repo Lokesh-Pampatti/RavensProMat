@@ -13,7 +13,7 @@
     
 from PIL import Image
 import numpy as np
-import cv2
+#import cv2
 
 class Agent:
     # The default constructor for your Agent. Make sure to execute any
@@ -50,7 +50,8 @@ class Agent:
 
         if problem.problemType == "3x3":
             image_opt.append(problem.figures["7"].visualFilename)
-            image_opt.append(problem.figures["7"].visualFilename)
+            image_opt.append(problem.figures["8"].visualFilename)
+            im_d = Image.open(problem.figures["D"].visualFilename)
             im_e = Image.open(problem.figures["E"].visualFilename)
             im_f = Image.open(problem.figures["F"].visualFilename)
             im_g = Image.open(problem.figures["G"].visualFilename)
@@ -59,8 +60,51 @@ class Agent:
         im_a = Image.open(problem.figures["A"].visualFilename)
         im_b = Image.open(problem.figures["B"].visualFilename)
         im_c = Image.open(problem.figures["C"].visualFilename)
+        shift_x = self.calculate_horizontal_shift(im_a, im_b)
+        shift_y = self.calculate_vertical_shift(im_a, im_b)
 
-        # Calculate number of black pixels in A, B and C
+        matching_options = image_opt
+
+        for i in range(1, 7):
+            im_option = Image.open(problem.figures[str(i)].visualFilename)
+            option_shift_x = self.calculate_horizontal_shift(im_c, im_option)
+            option_shift_y = self.calculate_vertical_shift(im_c, im_option)
+
+            if shift_x == option_shift_x and shift_y == option_shift_y:
+                matching_options.append(i)
+
+        if matching_options:
+            return matching_options[0]
+
+        # Process of elimination
+        remaining_options = self.eliminate_high_shifts(im_c, matching_options)
+        return min(remaining_options)
+
+    def calculate_horizontal_shift(self, image1, image2):
+        width1, _ = image1.size
+        width2, _ = image2.size
+        return width2 - width1
+
+    def calculate_vertical_shift(self, image1, image2):
+        _, height1 = image1.size
+        _, height2 = image2.size
+        return height2 - height1
+
+    def eliminate_high_shifts(self, image, options):
+        remaining_options = []
+        for option in options:
+            im_option = Image.open(problem.figures[str(option)].visualFilename)
+            option_shift_x = self.calculate_horizontal_shift(image, im_option)
+            option_shift_y = self.calculate_vertical_shift(image, im_option)
+
+            if abs(option_shift_x) <= 10 and abs(option_shift_y) <= 10:
+                remaining_options.append(option)
+            print(remaining_options)
+            return remaining_options
+        
+
+        
+      # Calculate number of black pixels in A, B and C
         black_pixels_a = self.count_black_pixels(im_a)
         black_pixels_b = self.count_black_pixels(im_b)
         black_pixels_c = self.count_black_pixels(im_c)
@@ -82,13 +126,13 @@ class Agent:
 
             # Check if the difference is closer to the desired difference
             if abs(diff_c - diff_a_b) < closest_match_diff:
-                closest_match_diff = abs(diff_c - diff_a_b)
+                closest_match_diff = abs(diff_c - diff_a_b)           
                 closest_match_index = i + 1
-
         return closest_match_index  # Return the index of the closest matching image
+        
 
     def count_black_pixels(self, image):
-            # Convert the image to grayscale if needed
+            # Convert the image to grayscale if needed  
             if image.mode != 'L':
                 image = image.convert('L')
 
@@ -99,9 +143,9 @@ class Agent:
             black_pixels = sum(pixel == 0 for pixel in pixels)
 
             return black_pixels
-    def _shimmer(sample_binary_img):
+    """def _shimmer(sample_binary_img):
 
-        tolerance = 10
+        tolerance = ""10
         shimmer =[]
 
         for x_roll in range(-tolerance, tolerance + 1 ):
@@ -117,4 +161,4 @@ class Agent:
         for shim_img in test_shims:
             diff_img = abs(shim_img - target)
             shim_diff = np.sum(diff_img)
-        return shim_diff
+        return shim_diff"""

@@ -89,7 +89,6 @@ if __name__ == "__main__":
 
 
 
-
     """def Solve(self, problem):
         def calculate_answer ():
             black_pixels_a = self.count_black_pixels(im_a)

@@ -35,9 +35,87 @@ class Agent:
     # Returning your answer as a string may cause your program to crash.
     # Remember to return the answer [Key], not the name, as the ANSWERS ARE SHUFFLED.
     # Use var = problem.figures["A"].visualFilename to open files
-    # Do not use Absolute pathing to open files.
-
+    # Do not use Absolute pathing to open files
     def Solve(self, problem):
+        # Load images A, B, and C
+        im_a = Image.open(problem.figures["A"].visualFilename).convert("1")
+        im_b = Image.open(problem.figures["B"].visualFilename).convert("1")
+        im_c = Image.open(problem.figures["C"].visualFilename).convert("1")
+
+        # Calculate horizontal and vertical shifts between A and B
+        shift_x = self.calculate_horizontal_shift(im_a, im_b)
+        shift_y = self.calculate_vertical_shift(im_a, im_b)
+
+        # Load images 1, 2, 3, 4, 5, and 6
+        options = []
+        for i in range(1, 7):
+            option = Image.open(problem.figures[str(i)].visualFilename).convert("1")
+            options.append(option)
+
+        # Compare shifts between C and other options
+        matching_options = []
+        for option in options:
+            option_shift_x = self.calculate_horizontal_shift(im_c, option)
+            option_shift_y = self.calculate_vertical_shift(im_c, option)
+            if shift_x == option_shift_x and shift_y == option_shift_y:
+                matching_options.append(option)
+
+        if matching_options:
+            for option_name, option_figure in problem.figures.items():
+                if option_figure.visualFilename == matching_options[0].filename:
+                    option_number = int(option_name)
+                    return option_number
+
+        return -1  # Return -1 if no matching image is found
+
+    def calculate_horizontal_shift(self, image1, image2):
+        width1, _ = image1.size
+        width2, _ = image2.size
+        return width2 - width1
+
+    def calculate_vertical_shift(self, image1, image2):
+        _, height1 = image1.size
+        _, height2 = image2.size
+        return height2 - height1
+
+def main():
+    agent = Agent()
+    problem = None  # Replace with the problem you want to solve
+    answer = agent.Solve(problem)
+    print("Answer:", answer)
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+    """def Solve(self, problem):
+        def calculate_answer ():
+            black_pixels_a = self.count_black_pixels(im_a)
+            black_pixels_b = self.count_black_pixels(im_b)
+            black_pixels_c = self.count_black_pixels(im_c)
+
+        # Calculate difference in black pixels between A and B
+            diff_a_b = black_pixels_a - black_pixels_b
+
+        # Check differences with C images
+            closest_match_index = -1
+            closest_match_diff = float('inf')  # Initialize with a large value
+
+            for i, image_path in enumerate(image_opt):
+                im = Image.open(image_path)
+                black_pixels_c = self.count_black_pixels(im)
+                diff_c = black_pixels_c - black_pixels_a
+
+            if diff_c == diff_a_b:
+                return i + 1  # Return the index of the exact matching image
+
+            # Check if the difference is closer to the desired difference
+            if abs(diff_c - diff_a_b) < closest_match_diff:
+                closest_match_diff = abs(diff_c - diff_a_b)           
+                closest_match_index = i + 1
+            return closest_match_index  
         # Load images
         image_opt = [
             problem.figures["1"].visualFilename,
@@ -45,11 +123,16 @@ class Agent:
             problem.figures["3"].visualFilename,
             problem.figures["4"].visualFilename,
             problem.figures["5"].visualFilename,
-            problem.figures["6"].visualFilename
+            problem.figures["6"].visualFilename,
+            
         ]
 
         if problem.problemType == "3x3":
             image_opt.append(problem.figures["7"].visualFilename)
+            answer = calculate_answer(problem)
+            results = open("results.txt", "w")
+            results.write("%s,%s,%d" % (set.name, problem.name, answer))
+            results.close()
             image_opt.append(problem.figures["8"].visualFilename)
             im_d = Image.open(problem.figures["D"].visualFilename)
             im_e = Image.open(problem.figures["E"].visualFilename)
@@ -99,38 +182,9 @@ class Agent:
 
             if abs(option_shift_x) <= 10 and abs(option_shift_y) <= 10:
                 remaining_options.append(option)
-            print(remaining_options)
-            return remaining_options
-        
-
-        
-      # Calculate number of black pixels in A, B and C
-        black_pixels_a = self.count_black_pixels(im_a)
-        black_pixels_b = self.count_black_pixels(im_b)
-        black_pixels_c = self.count_black_pixels(im_c)
-
-        # Calculate difference in black pixels between A and B
-        diff_a_b = black_pixels_a - black_pixels_b
-
-        # Check differences with C images
-        closest_match_index = -1
-        closest_match_diff = float('inf')  # Initialize with a large value
-
-        for i, image_path in enumerate(image_opt):
-            im = Image.open(image_path)
-            black_pixels_c = self.count_black_pixels(im)
-            diff_c = black_pixels_c - black_pixels_a
-
-            if diff_c == diff_a_b:
-                return i + 1  # Return the index of the exact matching image
-
-            # Check if the difference is closer to the desired difference
-            if abs(diff_c - diff_a_b) < closest_match_diff:
-                closest_match_diff = abs(diff_c - diff_a_b)           
-                closest_match_index = i + 1
-        return closest_match_index  # Return the index of the closest matching image
-        
-
+        print(remaining_options)
+        return remaining_options
+    
     def count_black_pixels(self, image):
             # Convert the image to grayscale if needed  
             if image.mode != 'L':
@@ -142,7 +196,9 @@ class Agent:
             # Count the number of black pixels (assuming black is represented by 0)
             black_pixels = sum(pixel == 0 for pixel in pixels)
 
-            return black_pixels
+            return black_pixels"""
+    # Calculate number of black pixels in A, B and C
+    # Return the index of the closest matching image
     """def _shimmer(sample_binary_img):
 
         tolerance = ""10
